@@ -1,0 +1,126 @@
+[debug] Created tunnel using local port: '34589'
+
+[debug] SERVER: "127.0.0.1:34589"
+
+[debug] Original chart version: ""
+[debug] CHART PATH: /home/sachin/personal/go-app/go-app-chart
+
+NAME:   cantankerous-olm
+REVISION: 1
+RELEASED: Tue Jun 25 22:11:44 2019
+CHART: go-app-chart-0.1.0
+USER-SUPPLIED VALUES:
+{}
+
+COMPUTED VALUES:
+affinity: {}
+fullnameOverride: ""
+image:
+  pullPolicy: IfNotPresent
+  repository: sachinnicky/go-app
+  tag: latest
+imagePullSecrets: []
+ingress:
+  annotations: {}
+  enabled: false
+  hosts:
+  - host: chart-example.local
+    paths: []
+  tls: []
+nameOverride: ""
+nodeSelector: {}
+replicaCount: 1
+resources: {}
+service:
+  containerPort: 8080
+  targetPort: 80
+  type: ClusterIP
+tolerations: []
+
+HOOKS:
+---
+# cantankerous-olm-go-app-chart-test-connection
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "cantankerous-olm-go-app-chart-test-connection"
+  labels:
+    app.kubernetes.io/name: go-app-chart
+    helm.sh/chart: go-app-chart-0.1.0
+    app.kubernetes.io/instance: cantankerous-olm
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Tiller
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['cantankerous-olm-go-app-chart:8080']
+  restartPolicy: Never
+MANIFEST:
+
+---
+# Source: go-app-chart/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cantankerous-olm-go-app-chart
+  labels:
+    app.kubernetes.io/name: go-app-chart
+    helm.sh/chart: go-app-chart-0.1.0
+    app.kubernetes.io/instance: cantankerous-olm
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: go-app-chart
+    app.kubernetes.io/instance: cantankerous-olm
+---
+# Source: go-app-chart/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cantankerous-olm-go-app-chart
+  labels:
+    app.kubernetes.io/name: go-app-chart
+    helm.sh/chart: go-app-chart-0.1.0
+    app.kubernetes.io/instance: cantankerous-olm
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: go-app-chart
+      app.kubernetes.io/instance: cantankerous-olm
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: go-app-chart
+        app.kubernetes.io/instance: cantankerous-olm
+    spec:
+      containers:
+        - name: go-app-chart
+          image: "sachinnicky/go-app:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {}

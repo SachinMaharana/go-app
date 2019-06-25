@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: sachinnicky/go-app
-  tag: lastest
+  tag: latest
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -15,7 +15,7 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  containerPort: 80
+  containerPort: 8080
   targetPort: 80
 
 ingress:
