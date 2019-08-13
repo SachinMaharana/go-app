@@ -7,8 +7,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.containerPort }}
-      targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .Values.service.targetPort }}
+      targetPort: {{ .Values.service.containerPort }}
       protocol: TCP
   selector:
     app.kubernetes.io/name: {{ include "go-app-chart.name" . }}
